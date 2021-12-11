@@ -1,20 +1,19 @@
 Citizen.CreateThread(function() 
-    while true do 
+    while true do
         Citizen.Wait(2000)
-        if GetDistanceBetweenCoords(config.spawn_point, GetEntityCoords(GetPlayerPed(-1))) > config.max_distance then
-            local hash = GetEntityModel(PlayerPedId())
-            local getdefault = GetHashKey(config.default_ped)
-            local check = false
-            for k,v in pairs(FoundObjects) do
-                if v.HashIs == hash  and v.HashIs == getdefault then
-                    check = true
-                    break
-                end 
-            end
+        local ped = PlayerPedId()
 
-            if(check == true) then
-                SetEntityCoords(PlayerPedId(),config.spawn_point)
-                TriggerEvent('chatMessage', config.spawn_back_message)
+        if GetDistanceBetweenCoords(config.spawnPoint, GetEntityCoords(ped)) > config.maxDistance then
+            local model = GetEntityModel(ped)
+            local hashInfo = FoundObjects[model]
+
+            if hashInfo and model == GetHashKey(config.defaultPed) then
+                SetEntityCoords(ped, config.spawnPoint)
+                TriggerEvent('chat:addMessage', {
+                    color = { 255, 0, 0},
+                    multiline = true,
+                    args = {"Spawn", config.spawnBackMessage}
+                })
             end
         end
     end
